@@ -1,0 +1,30 @@
+---
+- name: backup config aruba switch cx
+  hosts: switch-lab
+  collections:
+    - arubanetworks.aoscx
+
+  vars:
+    ansible_connection: network_cli
+    ansible_network_os: arubanetworks.aoscx.aoscx
+    #ansible_username: 
+    #ansible_password:
+
+  tasks:
+  - name: backup config
+    aoscx_command:
+      commands:
+        - show run
+      output_file: ./{{ inventory_hostname }}output.cfg
+      output_file_format: plain-text
+  
+  - name: running show running-config
+    aoscx_command:
+      commands:
+        - show run
+    register: output
+
+  - name: save file
+    copy:
+      content: "{{ output.stdout | join('\n') }}"
+      dest: "./{{ inventory_hostname }}.cfg"

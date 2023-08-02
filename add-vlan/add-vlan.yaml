@@ -1,0 +1,42 @@
+---
+- name: add vlan aruba switch cx
+  hosts: switch-lab
+  collections:
+    - arubanetworks.aoscx
+
+  vars:
+    ansible_connection: network_cli
+    ansible_network_os: arubanetworks.aoscx.aoscx
+    #ansible_user:
+    #ansible_password:
+
+  tasks:
+  - name: create vlan
+    aoscx_command:
+      commands:
+        - configure terminal
+        - vlan {{new_vlans}}
+        - end
+  - name: trunk port
+    aoscx_command:
+      commands:
+        - configure terminal
+        - interface {{item}}
+        - no routing
+        - vlan trunk allowed {{trunk}}
+        - vlan trunk native {{native}}
+        - end
+    loop: "{{trunk_port}}" 
+  - name: access port
+    aoscx_command:
+      commands:
+        - configure terminal
+        - interface {{item}}
+        - no routing
+        - vlan access {{access}}
+        - end
+    loop: "{{access_port}}"
+  - name: save configuration
+    aoscx_command:
+      commands:
+        - write mem
