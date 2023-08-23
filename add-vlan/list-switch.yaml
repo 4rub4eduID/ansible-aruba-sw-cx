@@ -2,6 +2,7 @@
 switch-lab:
   hosts:
     10.234.23.51:
+      #ProxyJump: aruba-edu-id.com
       new_vlans: 2100-2101,2115
       trunk_port:
        - 1/1/1

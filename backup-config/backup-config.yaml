@@ -10,14 +10,7 @@
     #ansible_username: 
     #ansible_password:
 
-  tasks:
-  - name: backup config
-    aoscx_command:
-      commands:
-        - show run
-      output_file: ./{{ inventory_hostname }}output.cfg
-      output_file_format: plain-text
-  
+  tasks:  
   - name: running show running-config
     aoscx_command:
       commands:
